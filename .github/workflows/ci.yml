@@ -44,9 +44,21 @@ jobs:
         id: runvcpkg
         with:
           vcpkgGitCommitId: 8f3e8d6e95c7f91edea60c47a7d1414ab5ca9492
-      - name: Integrate vcpkg
+      - name: Checkout vcpkg-tool repo
+        uses: actions/checkout@v3
+        with:
+          repository: dan-shaw/vcpkg-tool
+          path: graph-api
+          ref: graph-api
+      - name: Build vcpkg
         run: |
-          ${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/vcpkg integrate install
+          mkdir build-cmake-only
+          cd build-cmake-only
+          cmake ../graph-api/
+          cmake --build . -j 3
+          cd Debug
+          vcpkg integrate install
+          cd ../../
 #      - name: Upload libs
 #        uses: actions/upload-artifact@v3
 #        with:
@@ -71,7 +83,7 @@ jobs:
         run: |
           cd build-scummvm
           ls
-          msbuild scummvm.sln /m /p:VcpkgEnableManifest=true /p:BuildInParallel=true /p:Configuration=${{ env.CONFIGURATION }} /p:PreferredToolArchitecture=x64 /p:Platform=${{ matrix.platform }} /v:minimal
+          msbuild scummvm.sln /m /p:VcpkgEnableManifest=true /p:VcpkgAdditionalInstallOptions="--debug" /p:BuildInParallel=true /p:Configuration=${{ env.CONFIGURATION }} /p:PreferredToolArchitecture=x64 /p:Platform=${{ matrix.platform }} /v:minimal
 #      - name: Upload scummvm
 #        uses: actions/upload-artifact@v3
 #        with:

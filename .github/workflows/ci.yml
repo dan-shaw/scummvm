@@ -43,7 +43,7 @@ jobs:
         uses: lukka/run-vcpkg@v11
         id: runvcpkg
         with:
-          vcpkgGitCommitId: 662dbb50e63af15baa2909b7eac5b1b87e86a0aa
+          vcpkgGitCommitId: 8f3e8d6e95c7f91edea60c47a7d1414ab5ca9492
       - name: Integrate vcpkg
         run: |
           ${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}/vcpkg integrate install
